@@ -47,7 +47,7 @@ create table plants_type
     plants_type_id serial
         constraint plants_type_pk
             primary key,
-    name           integer
+    name           text
 );
 
 create unique index plants_type_plants_type_id_uindex
@@ -61,8 +61,8 @@ create table plants_sort
     plants_type_id integer not null
         constraint plants_sort_plants_type_fk
             references plants_type,
-    name           integer,
-    description    integer
+    name           text,
+    description    text
 );
 
 create unique index plants_sort_plants_sort_id_uindex
@@ -76,7 +76,7 @@ create table plants
     plants_sort_id integer not null
         constraint plants_plants_sort_fk
             references plants_sort,
-    name           integer not null,
+    name           text    not null,
     x              integer not null,
     y              integer not null,
     constraint plants_check
@@ -103,7 +103,7 @@ create table world_part
     world_part_id serial
         constraint world_part_pk
             primary key,
-    name          integer,
+    name          text,
     x1            integer not null,
     x2            integer not null,
     y1            integer,

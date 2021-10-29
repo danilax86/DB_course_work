@@ -32,7 +32,7 @@ declare
 -- fixme: это условие не даёт вообще что-то изменять. @ckaf
 -- todo: разобраться, что такое new и old @danilax86
 begin
-    if x_new < location_x1 || x_new > location_x2 || y_new < location_y1 || y_new > location_y2 then
+    if x_new < location_x1 or x_new > location_x2 or y_new < location_y1 or y_new > location_y2 then
         return null;
     end if;
     return new;

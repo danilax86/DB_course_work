@@ -47,7 +47,7 @@ create table plants_type
     plants_type_id serial
         constraint plants_type_pk
             primary key,
-    name           text
+    name           text not null
 );
 
 create unique index plants_type_plants_type_id_uindex
@@ -106,8 +106,8 @@ create table world_part
     name          text,
     x1            integer not null,
     x2            integer not null,
-    y1            integer,
-    y2            integer,
+    y1            integer not null,
+    y2            integer not null,
     constraint world_part_check
         check ((x1 >= 0) AND (x1 <= 500) AND (y1 >= 0) AND (y1 <= 500) AND (x2 >= 0) AND (x2 <= 500) AND (y2 >= 0) AND
                (y2 <= 500))

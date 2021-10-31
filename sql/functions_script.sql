@@ -285,36 +285,6 @@ $$
     end;
 $$ language plpgsql;
 ------------------------------------------------------------------------------------------------------------------------
-drop function insert_animal_object(integer, text, integer, integer);
-create or replace function insert_animal_object(sort_id integer,
-                                                name_arg text,
-                                                x_arg integer,
-                                                y_arg integer)
-returns table (animal integer, sort integer, name text, x integer, y integer) as
-$$
-    declare animal_id integer;
-    begin
-        insert into animals (animals_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
-        returning animals_id into animal_id;
-        return query select * from animals where animals_id = animal_id;
-    end;
-$$ language plpgsql;
-
-drop function insert_plant_object(integer, text, integer, integer);
-create or replace function insert_plant_object(sort_id integer,
-                                                name_arg text,
-                                                x_arg integer,
-                                                y_arg integer)
-returns table (plant integer, sort integer, name text, x integer, y integer) as
-$$
-    declare plant_id integer;
-    begin
-        insert into plants (plants_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
-        returning plants_id into plant_id;
-        return query select * from plants where plants_id = plant_id;
-    end;
-$$ language plpgsql;
-------------------------------------------------------------------------------------------------------------------------
 drop function enable_symbiosis(integer, integer);
 create or replace function enable_symbiosis(plant_sort_id_arg integer, animal_sort_id_arg integer)
 returns table (plant integer, animal integer) as
@@ -337,5 +307,109 @@ $$
         return query select * from animals_plants;
     end;
 $$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function insert_animal_object(integer, text, integer, integer);
+create or replace function insert_animal_object(sort_id integer,
+                                                name_arg text,
+                                                x_arg integer,
+                                                y_arg integer)
+returns table (animal integer, sort integer, name text, x integer, y integer) as
+$$
+    declare animal_id integer;
+    begin
+        insert into animals (animals_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
+        returning animals_id into animal_id;
+        return query select * from animals where animals_id = animal_id;
+    end;
+$$ language plpgsql;
 
--- todo: add more functions
+drop function insert_animal_sort_object(integer, text, integer, integer);
+create or replace function insert_animal_sort_object(type_id integer,
+                                                name_arg text,
+                                                description_arg text,
+                                                world_part_id_arg integer)
+returns table (sort integer, type integer, name text, description text) as
+$$
+    declare sort_id integer;
+    begin
+        insert into animals_sort (animals_type_id, name, description) values (type_id, name_arg, description_arg)
+        returning animals_sort_id into sort_id;
+        insert into animals_location (animals_sort_id, world_part_id) values (sort_id, world_part_id_arg);
+        return query select * from animals_sort where animals_sort_id = sort_id;
+    end;
+$$ language plpgsql;
+
+drop function insert_animal_type_object(text);
+create or replace function insert_animal_type_object(name_arg text)
+returns table (type integer, name text) as
+$$
+    declare type_id integer;
+    begin
+        insert into animals_type (name) values (name_arg)
+        returning animals_type_id into type_id;
+        return query select * from animals_type where animals_type_id = type_id;
+    end;
+$$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function insert_plant_object(integer, text, integer, integer);
+create or replace function insert_plant_object(sort_id integer,
+                                                name_arg text,
+                                                x_arg integer,
+                                                y_arg integer)
+returns table (plant integer, sort integer, name text, x integer, y integer) as
+$$
+    declare plant_id integer;
+    begin
+        insert into plants (plants_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
+        returning plants_id into plant_id;
+        return query select * from plants where plants_id = plant_id;
+    end;
+$$ language plpgsql;
+
+drop function insert_plant_sort_object(integer, text, integer, integer);
+create or replace function insert_plant_sort_object(type_id integer,
+                                                name_arg text,
+                                                description_arg text,
+                                                world_part_id_arg integer)
+returns table (sort integer, type integer, name text, description text) as
+$$
+    declare sort_id integer;
+    begin
+        insert into plants_sort (plants_type_id, name, description) values (type_id, name_arg, description_arg)
+        returning plants_sort_id into sort_id;
+        insert into plants_location (plants_sort_id, world_part_id) values (sort_id, world_part_id_arg);
+        return query select * from plants_sort where plants_sort_id = sort_id;
+    end;
+$$ language plpgsql;
+
+drop function insert_plant_type_object(text);
+create or replace function insert_plant_type_object(name_arg text)
+returns table (type integer, name text) as
+$$
+    declare type_id integer;
+    begin
+        insert into plants_type (name) values (name_arg)
+        returning plants_type_id into type_id;
+        return query select * from plants_type where plants_type_id = type_id;
+    end;
+$$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function update_animal_sort_location(integer, integer);
+create or replace function update_animal_sort_location(sort_arg integer, world_part_id_arg integer)
+returns table (sort integer, world_part integer) as
+$$
+    begin
+        update animals_location set world_part_id = world_part_id_arg where animals_sort_id = sort_arg;
+        return query select * from animals_location where animals_sort_id = sort_arg;
+    end;
+$$ language plpgsql;
+
+drop function update_plant_sort_location(integer, integer);
+create or replace function update_plant_sort_location(sort_arg integer, world_part_id_arg integer)
+returns table (sort integer, world_part integer) as
+$$
+    begin
+        update plants_location set world_part_id = world_part_id_arg where plants_sort_id = sort_arg;
+        return query select * from plants_location where plants_sort_id = sort_arg;
+    end;
+$$ language plpgsql;

@@ -314,5 +314,28 @@ $$
         return query select * from plants where plants_id = plant_id;
     end;
 $$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function enable_symbiosis(integer, integer);
+create or replace function enable_symbiosis(plant_sort_id_arg integer, animal_sort_id_arg integer)
+returns table (plant integer, animal integer) as
+$$
+    begin
+        insert into animals_plants (plants_sort_id, animals_sort_id)
+        values (plant_sort_id_arg, animal_sort_id_arg);
+        return query select * from animals_plants
+        where plants_sort_id = plant_sort_id_arg and animals_sort_id = animal_sort_id_arg;
+    end;
+$$ language plpgsql;
+
+drop function disable_symbiosis(integer, integer);
+create or replace function disable_symbiosis(plant_sort_id_arg integer, animal_sort_id_arg integer)
+returns table (plant integer, animal integer) as
+$$
+    begin
+        delete from animals_plants
+        where plants_sort_id = plant_sort_id_arg and animals_sort_id = animal_sort_id_arg;
+        return query select * from animals_plants;
+    end;
+$$ language plpgsql;
 
 -- todo: add more functions

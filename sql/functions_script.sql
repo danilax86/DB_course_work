@@ -264,4 +264,55 @@ $$
         where plants_sort.name = sort_name;
     end;
 $$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function update_animal_sort_description(integer);
+create or replace function update_animal_sort_description(id integer, description_arg text)
+returns integer as
+$$
+    begin
+        update animals_sort set description = description_arg where animals_sort_id = id;
+        return 1;
+    end;
+$$ language plpgsql;
+
+drop function update_plant_sort_description(integer);
+create or replace function update_plant_sort_description(id integer, description_arg text)
+returns integer as
+$$
+    begin
+        update plants_sort set description = description_arg where plants_sort_id = id;
+        return 1;
+    end;
+$$ language plpgsql;
+------------------------------------------------------------------------------------------------------------------------
+drop function insert_animal_object(integer, text, integer, integer);
+create or replace function insert_animal_object(sort_id integer,
+                                                name_arg text,
+                                                x_arg integer,
+                                                y_arg integer)
+returns table (animal integer, sort integer, name text, x integer, y integer) as
+$$
+    declare animal_id integer;
+    begin
+        insert into animals (animals_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
+        returning animals_id into animal_id;
+        return query select * from animals where animals_id = animal_id;
+    end;
+$$ language plpgsql;
+
+drop function insert_plant_object(integer, text, integer, integer);
+create or replace function insert_plant_object(sort_id integer,
+                                                name_arg text,
+                                                x_arg integer,
+                                                y_arg integer)
+returns table (plant integer, sort integer, name text, x integer, y integer) as
+$$
+    declare plant_id integer;
+    begin
+        insert into plants (plants_sort_id, name, x, y) values (sort_id, name_arg, x_arg, y_arg)
+        returning plants_id into plant_id;
+        return query select * from plants where plants_id = plant_id;
+    end;
+$$ language plpgsql;
+
 -- todo: add more functions

@@ -62,7 +62,7 @@ $$ language plpgsql;
 ------------------------------------------------------------------------------------------------------------------------
 
 create or replace function get_animal_sort_description_by_sort_id(sort_id integer)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description text) as
 $$
 begin
     return query select * from animals_sort where animals_sort_id = sort_id;
@@ -71,7 +71,7 @@ $$ language plpgsql;
 
 
 create or replace function get_animal_sort_description_by_animal_id(animal_id integer)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description text) as
 $$
 begin
     return query select animals_sort.animals_sort_id,
@@ -86,7 +86,7 @@ $$ language plpgsql;
 
 
 create or replace function get_animal_sort_description_by_animal_name(animal_name text)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description text) as
 $$
 begin
     return query select animals_sort.animals_sort_id,

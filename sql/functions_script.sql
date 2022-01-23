@@ -101,7 +101,7 @@ $$ language plpgsql;
 
 ------------------------------------------------------------------------------------------------------------------------
 create or replace function get_plant_sort_description_by_sort_id(sort_id integer)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description text) as
 $$
 begin
     return query select * from plants_sort where plants_sort_id = sort_id;
@@ -110,7 +110,7 @@ $$ language plpgsql;
 
 
 create or replace function get_plant_sort_description_by_plant_id(plant_id integer)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description text) as
 $$
 begin
     return query select plants_sort.plants_sort_id,
@@ -125,7 +125,7 @@ $$ language plpgsql;
 
 
 create or replace function get_plant_sort_description_by_plant_name(plant_name text)
-    returns table (sort integer, type integer, name text, description text) as
+    returns table (id integer, type_id integer, name text, description textt) as
 $$
 begin
     return query select plants_sort.plants_sort_id,
